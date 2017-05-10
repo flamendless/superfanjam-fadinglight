@@ -11,7 +11,7 @@ function GROUND:new(x,y,w,h)
 end
 
 function GROUND:load()
-	GAME.insertEntities(self)
+	ENTITIES.insert(self)
 end
 
 function GROUND:update(dt)

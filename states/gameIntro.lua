@@ -1,9 +1,8 @@
 local STATECLASS = require("modules/gamestatesClass")
 
-local GAME = STATECLASS:set("GAME")
-local entities = {}
+local GAME_INTRO = STATECLASS:set("GAME")
 
-function GAME.preload()
+function GAME_INTRO.preload()
 	PRELOADER.newImage(assets.images,"playerSheet","assets/images/entities/player_sheet.png")
 
 	ASSETS.preload(function()
@@ -29,41 +28,37 @@ function GAME.preload()
 	end)
 end
 
-function GAME.load()
-	player = PLAYER(anim_pIdle,MISC.centerWidth(),MISC.centerHeight(),20)
+function GAME_INTRO.load()
+	player = PLAYER(anim_pIdle,16,(100 - assets.images.playerSheet:getHeight()),20)
 	ground = GROUND(0,100,settings.gameWidth,settings.gameHeight)
 end
 
-function GAME.update(dt)
-	for k,v in pairs(entities) do
+function GAME_INTRO.update(dt)
+	for k,v in pairs(ENTITIES.get()) do
 		v:update(dt)
 	end
 end
 
-function GAME.draw()
-	for k,v in pairs(entities) do
+function GAME_INTRO.draw()
+	for k,v in pairs(ENTITIES.get()) do
 		v:draw()
 	end
 end
 
-function GAME.keypressed(key)
-	for k,v in pairs(entities) do
+function GAME_INTRO.keypressed(key)
+	for k,v in pairs(ENTITIES.get()) do
 		v:keypressed(key)
 	end
 end
 
-function GAME.keyreleased(key)
-	for k,v in pairs(entities) do
+function GAME_INTRO.keyreleased(key)
+	for k,v in pairs(ENTITIES.get()) do
 		v:keyreleased(key)
 	end
 end
 
-function GAME.insertEntities(obj)
-	table.insert(entities,obj)
-end
-
-function GAME.exit()
+function GAME_INTRO.exit()
 
 end
 
-return GAME
+return GAME_INTRO

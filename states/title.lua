@@ -97,7 +97,7 @@ end
 
 function TITLE.cursorAction()
 	local actions = {
-		GAME,
+		GAME_INTRO,
 		OPTIONS,
 		ABOUT,
 		CREDITS,

@@ -17,7 +17,7 @@ function MODULES.load()
 	GAMESTATES = require("src/gamestates")
 	ASSETS = require("src/assetsManager")
 	MISC = require("modules/miscFunctions")
-
+	ENTITIES = require("src/entities")
 
 
 	MODULES.initialize()

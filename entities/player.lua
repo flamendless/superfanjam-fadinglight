@@ -39,7 +39,7 @@ function PLAYER:new(anim,x,y,spd)
 end
 
 function PLAYER:load()
-	GAME.insertEntities(self)
+	ENTITIES.insert(self)
 
 	oTimer = TIMER.new()
 	oTimer:every(2, function()
@@ -57,6 +57,10 @@ function PLAYER:update(dt)
 	self:jumping(dt)
 	self:falling(dt)
 	self:overridePhysics(dt)
+
+	if self.x >= settings.gameWidth then
+		GAMESTATES.nextLevel()
+	end
 end
 
 function PLAYER:draw()
