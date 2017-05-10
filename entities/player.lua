@@ -1,8 +1,5 @@
 local PLAYER = OBJ:extend()
 
-local ground = {}
-ground.y = 82
-
 function PLAYER:new(anim,x,y,spd)
 	self.x = x or 0
 	self.y = y or 0
@@ -12,7 +9,8 @@ function PLAYER:new(anim,x,y,spd)
 	self.animations = {
 		anim_pIdle,
 		anim_pRun,
-		anim_pJump
+		anim_pJump,
+		anim_pFalling
 	}
 	self.isMoving = false
 	self.isJumping = false
@@ -33,6 +31,7 @@ function PLAYER:new(anim,x,y,spd)
 	self.jMaxPower = 3
 	self.jAccel = 1
 	self.grav = 0.9
+	self.maxJump = 0
 
 	self.overrideTimer = false
 
@@ -56,6 +55,7 @@ function PLAYER:update(dt)
 	self:collisions(dt)
 	self:movement(dt)
 	self:jumping(dt)
+	self:falling(dt)
 	self:overridePhysics(dt)
 end
 
@@ -120,12 +120,22 @@ function PLAYER:movement(dt)
 			end
 		end
 	end
-
+	--horizontal
 	self.x = self.x + (self.hspd * self.spd) * dt
+	--vertical
+	if self.vspd ~= 0 then
+		if self.y > self.maxJump then
+			self.y = self.y + (self.vspd * self.jspd) * dt
+		end
+	end
 end
 
 function PLAYER:jumping(dt)
 	local up = love.keyboard.isDown(keybindings.KEY_UP)
+
+	if self.onFloor then
+		self.maxJump = ground.y - (self.h * 2.5)
+	end
 	if up then
 		if self.onFloor == true then
 			if self.jPower < self.jMaxPower then
@@ -140,8 +150,13 @@ function PLAYER:jumping(dt)
 		end
 	end
 
-	if self.vspd ~= 0 then
-		self.y = self.y + (self.vspd * self.jspd) * dt
+end
+
+function PLAYER:falling(dt)
+	if self.onFloor == false then
+		if math.floor(self.y) == self.maxJump then
+			self.vspd = 1
+		end
 	end
 end
 
@@ -160,11 +175,20 @@ function PLAYER:updateSprite(dt)
 		end
 		anim_pJump:gotoFrame(1)
 	else
-		self.curAnim = anim_pJump
-		if self.curAnim == anim_pJump then
-			if anim_pJump.position == anim_pJump:getTotalFrames() then
-				anim_pJump:gotoFrame(anim_pJump:getTotalFrames())
-			end
+		if self.vspd == -1 then
+			self.curAnim = anim_pJump
+			self:spriteControl(anim_pJump)
+		elseif self.vspd == 1 then
+			self.curAnim = anim_pFalling
+			self:spriteControl(anim_pFalling)
+		end
+	end
+end
+
+function PLAYER:spriteControl(anim)
+	if self.curAnim == anim then
+		if anim.position == anim:getTotalFrames() then
+			anim:gotoFrame(anim:getTotalFrames())
 		end
 	end
 end
@@ -176,12 +200,19 @@ function PLAYER:overridePhysics(dt)
 end
 
 function PLAYER:collisions(dt)
-	if self.y + self.h >= ground.y then
+	if self:isColliding() then
 		self.isJumping = false
 		self.onFloor = true
+		if self.y + self.h > ground.y + 1 then
+			self.y = self.y - 1
+		end
 	else
 		self.onFloor = false
 	end
+end
+
+function PLAYER:isColliding()
+	return self.y + self.h >= ground.y
 end
 
 return PLAYER

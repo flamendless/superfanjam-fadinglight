@@ -22,6 +22,10 @@ function OPTIONS.keypressed(key)
 
 end
 
+function OPTIONS.keyreleased(key)
+
+end
+
 function OPTIONS.exit()
 
 end

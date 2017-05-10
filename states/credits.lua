@@ -22,6 +22,10 @@ function CREDITS.keypressed(key)
 
 end
 
+function CREDITS.keyreleased(key)
+
+end
+
 function CREDITS.exit()
 
 end

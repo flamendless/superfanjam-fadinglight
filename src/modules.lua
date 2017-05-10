@@ -10,6 +10,8 @@ function MODULES.load()
 	OBJ = require("modules/classic/classic")
 	
 	PLAYER = require("entities/player")
+	GROUND = require("entities/ground")
+	CAMERA = require("entities/camera")
 
 	DEFAULTS = require("src/defaults")
 	GAMESTATES = require("src/gamestates")

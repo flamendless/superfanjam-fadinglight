@@ -29,6 +29,10 @@ function EXIT.keypressed(key)
 
 end
 
+function EXIT.keyreleased(key)
+
+end
+
 function EXIT.exit()
 
 end

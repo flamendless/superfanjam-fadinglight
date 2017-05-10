@@ -22,6 +22,10 @@ function ABOUT.keypressed(key)
 
 end
 
+function ABOUT.keyreleased(key)
+
+end
+
 function ABOUT.exit()
 
 end

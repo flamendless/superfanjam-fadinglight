@@ -62,7 +62,7 @@ function GAMESTATES.setState(newState)
 end
 
 function GAMESTATES.getState()
-	return STATE.getTag()
+	return STATE:getTag()
 end
 
 return GAMESTATES

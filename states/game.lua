@@ -15,17 +15,23 @@ function GAME.preload()
 		local pIdleSpeed = 0.5
 		local pRunSpeed = 0.1
 		local pJumpMin = pRunMax + 1
-		local pJumpMax = 9
+		local pJumpMax = 10
 		local pJumpSpeed = 0.08
+		local pFallMin = pJumpMax + 1
+		local pFallMax = 13
+		local pFallSpeed = 0.1
+
 
 		anim_pIdle = ANIM8.newAnimation(_player('1-' .. pIdleMax,1),pIdleSpeed)
 		anim_pRun = ANIM8.newAnimation(_player(pRunMin .. '-' .. pRunMax,1),pRunSpeed)
 		anim_pJump = ANIM8.newAnimation(_player(pJumpMin .. '-' .. pJumpMax,1),pJumpSpeed)
+		anim_pFalling = ANIM8.newAnimation(_player(pFallMin .. '-' .. pFallMax,1),pFallSpeed)
 	end)
 end
 
 function GAME.load()
 	player = PLAYER(anim_pIdle,MISC.centerWidth(),MISC.centerHeight(),20)
+	ground = GROUND(0,100,settings.gameWidth,settings.gameHeight)
 end
 
 function GAME.update(dt)

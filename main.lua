@@ -27,6 +27,9 @@ function love.keypressed(key)
 	if key == "space" then
 		settings.debug_draw = not settings.debug_draw
 	end
+	if key == "escape" then
+		love.event.quit("restart")
+	end
 end
 
 function love.keyreleased(key)
