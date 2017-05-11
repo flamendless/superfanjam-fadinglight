@@ -3,6 +3,11 @@ local STATECLASS = require("modules/gamestatesClass")
 local SPLASH = STATECLASS:set("SPLASH")
 
 local timer_flag = false
+local int = 0
+
+function SPLASH.getInt()
+	return int
+end
 
 function SPLASH.preload()
 	PRELOADER.newImage(assets.images,"splash_sheet","assets/images/splash/splash-sheet.png")

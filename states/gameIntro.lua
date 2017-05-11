@@ -1,9 +1,17 @@
 local STATECLASS = require("modules/gamestatesClass")
 
-local GAME_INTRO = STATECLASS:set("GAME")
+local GAME_INTRO = STATECLASS:set("GAME_INTRO")
+local _groundY = 100
+local int = 0
+
+function GAME_INTRO.getInt()
+	return int
+end
 
 function GAME_INTRO.preload()
 	PRELOADER.newImage(assets.images,"playerSheet","assets/images/entities/player_sheet.png")
+	PRELOADER.newImage(assets.images,"groundTop","assets/images/entities/ground_top.png")
+	PRELOADER.newImage(assets.images,"toLimbo","assets/images/entities/toLimbo.png")
 
 	ASSETS.preload(function()
 		local _player = ANIM8.newGrid(10,18,assets.images.playerSheet:getDimensions())
@@ -20,7 +28,6 @@ function GAME_INTRO.preload()
 		local pFallMax = 13
 		local pFallSpeed = 0.1
 
-
 		anim_pIdle = ANIM8.newAnimation(_player('1-' .. pIdleMax,1),pIdleSpeed)
 		anim_pRun = ANIM8.newAnimation(_player(pRunMin .. '-' .. pRunMax,1),pRunSpeed)
 		anim_pJump = ANIM8.newAnimation(_player(pJumpMin .. '-' .. pJumpMax,1),pJumpSpeed)
@@ -29,36 +36,34 @@ function GAME_INTRO.preload()
 end
 
 function GAME_INTRO.load()
-	player = PLAYER(anim_pIdle,16,(100 - assets.images.playerSheet:getHeight()),20)
-	ground = GROUND(0,100,settings.gameWidth,settings.gameHeight)
+	local player = PLAYER(anim_pIdle,16,(_groundY - assets.images.playerSheet:getHeight()),20,_groundY)
+	local ground = GROUND(0,_groundY)
+	ENTITIES.insert({player,ground})
 end
 
 function GAME_INTRO.update(dt)
-	for k,v in pairs(ENTITIES.get()) do
-		v:update(dt)
-	end
+	ENTITIES.update(dt)
 end
 
 function GAME_INTRO.draw()
-	for k,v in pairs(ENTITIES.get()) do
-		v:draw()
-	end
+	love.graphics.setBackgroundColor(0,0,0,255)
+	love.graphics.setColor(255,255,255,255)
+	love.graphics.draw(assets.images.toLimbo,
+		settings.gameWidth - 38,
+		_groundY - assets.images.toLimbo:getHeight())
+	ENTITIES.draw()
 end
 
 function GAME_INTRO.keypressed(key)
-	for k,v in pairs(ENTITIES.get()) do
-		v:keypressed(key)
-	end
+	ENTITIES.keypressed(key)
 end
 
 function GAME_INTRO.keyreleased(key)
-	for k,v in pairs(ENTITIES.get()) do
-		v:keyreleased(key)
-	end
+	ENTITIES.keyreleased(key)
 end
 
 function GAME_INTRO.exit()
-
+	ENTITIES.destroy()
 end
 
 return GAME_INTRO

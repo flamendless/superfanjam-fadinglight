@@ -1,8 +1,6 @@
 local STATECLASS = require("modules/gamestatesClass")
 
 local TITLE = STATECLASS:set("TITLE")
-
-local objects = {}
 local timer_flag = false
 
 local options = {
@@ -16,22 +14,24 @@ local padding = 12
 local font = fonts.jamboree_8
 local showOptions = false
 local cursor = 1
+local continue = false
 
 function TITLE.preload()
-	PRELOADER.newImage(assets.images,"titleScreenBG","assets/images/titleScreen/title_screen_bg.png")
-	PRELOADER.newImage(assets.images,"titleScreenText","assets/images/titleScreen/title_screen_text.png")
+	PRELOADER.newImage(assets.images,"titleBG","assets/images/titleScreen/title_screen_bg.png")
+	PRELOADER.newImage(assets.images,"titleText","assets/images/titleScreen/title_screen_text.png")
+	PRELOADER.newImage(assets.images,"unfinished","assets/images/etc/unfinished.png")
 
 	ASSETS.preload(function()
-		local _bg = ANIM8.newGrid(256,128,assets.images.titleScreenBG:getDimensions())
-		local _txt = ANIM8.newGrid(256,128,assets.images.titleScreenText:getDimensions())
-	
-		local max = 11
-		local bgSpeed = 0.4
-		local txtSpeed = 0.2
-		anim_titleBG = ANIM8.newAnimation(_bg('1-' .. max,1),bgSpeed)
-		anim_titleText = ANIM8.newAnimation(_txt('1-' .. max,1),txtSpeed)
-		table.insert(objects,anim_titleBG)
-		table.insert(objects,anim_titleText)
+		local _bg = ANIM8.newGrid(256,128,assets.images.titleBG:getDimensions()
+)
+		local bgSpeed = 0.3
+		local bgMax = 6
+
+		anim_bg = ANIM8.newAnimation(_bg('1-' .. bgMax,1),bgSpeed,
+		function()
+			anim_bg:pauseAtEnd()
+			GAMESTATES.setState(GAME_INTRO)
+		end)
 	end)
 end
 
@@ -40,19 +40,19 @@ function TITLE.load()
 	titleTimer:after(3, function()
 		showOptions = true
 	end)
-	table.insert(objects,titleTimer)
 end
 
 function TITLE.update(dt)
-	for k,v in pairs(objects) do
-		v:update(dt)
+	titleTimer:update(dt)
+	if continue then
+		anim_bg:update(dt)
 	end
 end
 
 function TITLE.draw()
 	love.graphics.setColor(255,255,255,255)
-	anim_titleBG:draw(assets.images.titleScreenBG,0,0)
-	anim_titleText:draw(assets.images.titleScreenText,0,0)
+	anim_bg:draw(assets.images.titleBG,0,0)
+	love.graphics.draw(assets.images.titleText,0,0)
 
 	if showOptions == true then
 		love.graphics.setColor(255,255,255,255)
@@ -65,13 +65,13 @@ function TITLE.draw()
 			end
 			love.graphics.print(options[i],
 				settings.gameWidth - padding - font:getWidth(options[i]),
-				MISC.centerHeight() + i * padding)
+				4 + i * padding)
 		end
 	end
 end
 
 function TITLE.keypressed(key)
-	if showOptions == false then
+	if showOptions == false and continue == false then
 		showOptions = true
 	else
 		if key == keybindings.KEY_DOWN then
@@ -103,7 +103,20 @@ function TITLE.cursorAction()
 		CREDITS,
 		EXIT
 	}
-	GAMESTATES.setState(actions[cursor])
+	if cursor == 1 then
+		continue = true
+		showOptions = false
+	else
+		if postJam == true then
+			GAMESTATES.setState(actions[cursor])
+		else
+			if cursor == #actions then
+				GAMESTATES.setState(actions[cursor])
+			else
+				GAMESTATES.setState(UNFINISHED)
+			end
+		end
+	end
 end
 
 function TITLE.exit()

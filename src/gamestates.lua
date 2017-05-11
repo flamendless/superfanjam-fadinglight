@@ -2,7 +2,7 @@ local GAMESTATES = {}
 
 insertTable(GAMESTATES)
 local levels = {}
-local maxLevels = 2
+local maxLevels = 0
 
 function GAMESTATES.initialize()
 	SPLASH = require("states/splash")
@@ -16,6 +16,7 @@ function GAMESTATES.initialize()
 	CREDITS = require("states/credits")
 	EXIT = require("states/exit")
 
+	UNFINISHED = require("states/unfinished")
 end
 
 function GAMESTATES.start(first)
@@ -49,11 +50,15 @@ function GAMESTATES.draw()
 end
 
 function GAMESTATES.keypressed(key)
-	STATE.keypressed(key)
+	if ASSETS.getState() == true then
+		STATE.keypressed(key)
+	end
 end
 
 function GAMESTATES.keyreleased(key)
-	STATE.keyreleased(key)
+	if ASSETS.getState() == true then
+		STATE.keyreleased(key)
+	end
 end
 
 function GAMESTATES.setState(newState)
@@ -76,13 +81,12 @@ function GAMESTATES.levelLoad()
 	for k, file in ipairs(love.filesystem.getDirectoryItems(dir)) do
 		local level = string.sub(file,1,-5)
 		lvl = require(dir .. "/" .. level)
+		maxLevels = maxLevels + 1
 	end
 end
 
 function GAMESTATES.getLevels()
-	for k,v in pairs(levels) do
-		print(k,v.tag)
-	end
+	return levels
 end
 
 function GAMESTATES.insertLevel(lvl)
@@ -96,10 +100,16 @@ function GAMESTATES.nextLevel()
 	local int = string.sub(reversed,1,1)
 	local nextInt = tonumber(int) + 1
 	if nextInt < maxLevels then
-		GAMESTATES.setState(nextLevel .. nextInt)
+		GAMESTATES.setState(levels[nextInt])
 	end
-	--print(nextLevel .. nextInt)
 end
 
+function GAMESTATES.getInt()
+	return STATE.getInt()
+end
+
+function GAMESTATES.getMaxLevels()
+	return maxLevels
+end
 
 return GAMESTATES

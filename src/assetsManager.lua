@@ -7,20 +7,24 @@ assets.audio = {}
 
 
 function ASSETS.preload(func)
-	local func = func or function() end
-	PRELOADER.start(function()
-		for k,v in pairs(assets.images) do
-			v:setFilter("nearest","nearest",1)
-		end
-		for k,v in pairs(assets.audio) do
-			v:setLooping(false)
-		end
-		ASSETS.animationLoad(func)
+	local func = func
+	if func == nil then
 		finished = true
 		GAMESTATES.load()
-	end)
-	font = fonts.jamboree_8
-	
+	else
+		PRELOADER.start(function()
+			for k,v in pairs(assets.images) do
+				v:setFilter("nearest","nearest",1)
+			end
+			for k,v in pairs(assets.audio) do
+				v:setLooping(false)
+			end
+			ASSETS.animationLoad(func)
+			finished = true
+			GAMESTATES.load()
+		end)
+		font = fonts.jamboree_8
+	end
 end
 
 

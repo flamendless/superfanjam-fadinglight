@@ -14,11 +14,8 @@ function DEFAULTS.initialize()
 			(settings.screenWidth/settings.gameWidth),
 			(settings.screenHeight/settings.gameHeight)
 		)
-	settings.translateX = (settings.screenWidth - settings.gameWidth)/2
+	settings.translateX = ((settings.screenWidth - settings.gameWidth)/2) / settings.gameRatio
 	settings.translateY = ((settings.screenHeight - settings.gameHeight)/2) / settings.gameRatio
-
-
-
 
 	fonts = DEFAULTS.fonts()
 	keybindings = DEFAULTS.keybindings()
@@ -44,6 +41,7 @@ function DEFAULTS.keybindings()
 	k.KEY_DOWN = "s"
 	k.KEY_ACTION = "e"
 	k.KEY_ENTER = "return"
+	k.KEY_ESCAPE = "escape"
 	return k
 end
 
