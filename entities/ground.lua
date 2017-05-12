@@ -1,12 +1,12 @@
 local GROUND = OBJ:extend()
 local tag = "GROUND"
 
-function GROUND:new(x,y,w,h)
+function GROUND:new(x,y,w,h,tile)
 	self.x = x
 	self.y = y
 	self.w = w or settings.gameWidth
 	self.h = h or settings.gameHeight
-
+	self.tile = tile or 32
 	self:load()
 end
 
@@ -22,8 +22,8 @@ function GROUND:draw()
 	love.graphics.setColor(255,255,255,255)
 	love.graphics.rectangle("fill",self.x,self.y,self.w,self.h)
 	
-	for i = (self.x/32), (self.w/32) - 1 do
-		local tileW = 32
+	for i = (self.x/self.tile), (self.w/self.tile) - 1 do
+		local tileW = self.tile
 		local groundX = i * tileW
 		local groundY = self.y - 6
 		love.graphics.draw(assets.images.groundTop,

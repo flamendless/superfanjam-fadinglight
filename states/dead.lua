@@ -1,6 +1,11 @@
 local STATECLASS = require("modules/gamestatesClass")
 
 local GAMEOVER = STATECLASS:set("GAMEOVER")
+local int = 0
+
+function GAMEOVER.getInt()
+	return int
+end
 
 function GAMEOVER.preload()
 	ASSETS.preload()

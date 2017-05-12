@@ -3,6 +3,8 @@ local STATECLASS = require("modules/gamestatesClass")
 local LEVEL_1 = STATECLASS:set("LEVEL_1")
 local _groundY = 80
 local int = 1
+local gap = 32
+local tile = 16
 
 function LEVEL_1.getInt()
 	return int
@@ -13,13 +15,9 @@ function LEVEL_1.preload()
 end
 
 function LEVEL_1.load()
-	player = PLAYER(anim_pIdle,16,(_groundY - assets.images.playerSheet:getHeight()),20,_groundY)
-	ground_left = GROUND(0,_groundY,
-		(settings.gameWidth/2) - 32,
-		settings.gameHeight)
-	ground_right = GROUND((settings.gameWidth/2) + 32, _groundY,
-		(settings.gameWidth), settings.gameHeight)
-	ENTITIES.insert({player,ground_left,ground_right})
+	local player = PLAYER(anim_pIdle,16,(_groundY - assets.images.playerSheet:getHeight()),20,_groundY)
+	local ground = GROUND(0,_groundY)
+	ENTITIES.insert({player,ground})
 end
 
 function LEVEL_1.update(dt)

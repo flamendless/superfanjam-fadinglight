@@ -52,11 +52,15 @@ function PLAYER:update(dt)
 	self:death(dt)
 
 	if self.x >= settings.gameWidth then
-		if GAMESTATES.getState() == "GAME_INTRO" then
-			GAMESTATES.setState(GAMESTATES.getLevels()[1])
-		else
-			GAMESTATES.nextLevel()
-		end
+		self:nextLevel()
+	end
+end
+
+function PLAYER:nextLevel()
+	if GAMESTATES.getState() == "GAME_INTRO" then
+		GAMESTATES.setState(GAMESTATES.getLevels()[1])
+	else
+		GAMESTATES.nextLevel()
 	end
 end
 
@@ -85,6 +89,14 @@ function PLAYER:collision(dt)
 		while g:overrideCollision() do
 			self.y = self.y - 1 * dt
 		end
+	end
+
+	self:boundary(dt)
+end
+
+function PLAYER:boundary(dt)
+	while self.x <= 8 do
+		self.x = self.x + 1 * dt
 	end
 end
 
@@ -163,6 +175,12 @@ function PLAYER:keypressed(key)
 		if self.canJump then
 			self.jump = true
 			self.vspd = -1
+		end
+	end
+
+	if settings.debug then
+		if key == "n" then
+			self:nextLevel()
 		end
 	end
 end

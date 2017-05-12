@@ -11,7 +11,8 @@ function MODULES.load()
 	
 	PLAYER = require("entities/player")
 	GROUND = require("entities/ground")
-	CAMERA = require("entities/camera")
+	HOLE = require("entities/hole")
+	BOX = require("entities/box")
 
 	DEFAULTS = require("src/defaults")
 	GAMESTATES = require("src/gamestates")

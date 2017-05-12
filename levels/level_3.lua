@@ -3,6 +3,7 @@ local STATECLASS = require("modules/gamestatesClass")
 local LEVEL_3 = STATECLASS:set("LEVEL_3")
 local _groundY = 100
 local int = 3
+local isEntity = true
 
 function LEVEL_3.getInt()
 	return int
