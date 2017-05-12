@@ -18,8 +18,8 @@ function PLAYER:new(anim,x,y,spd,ground)
 	self.dir = 1
 	self.hspd = 1
 	self.vspd = 1
-	self.jump = 30
-	self.maxJump = self.jump * 1.25
+	self.jSpd = 30
+	self.maxJump = self.jSpd * 1.25
 	self.jAccel = 60
 	self.accel = 50
 	self.reach = 0
@@ -29,6 +29,7 @@ function PLAYER:new(anim,x,y,spd,ground)
 	self.isJumping = false
 	self.isFalling = false
 	self.canJump = true
+	self.jump = true
 
 	self:load()
 end
@@ -44,9 +45,11 @@ function PLAYER:update(dt)
 
 	self:horizontalMovement(dt)
 	self:verticalMovement(dt)
-	self:jumping(dt)
-	self:falling(dt)
-	
+	if self.jump then
+		self:jumping(dt)
+	end
+
+	self:death(dt)
 
 	if self.x >= settings.gameWidth then
 		if GAMESTATES.getState() == "GAME_INTRO" then
@@ -62,15 +65,26 @@ function PLAYER:collision(dt)
 	local gy = g.y
 
 	self.reach = g.y - (self.h * 2)
+	if self.y <= self.reach then
+		self.vspd = 1
+	end
+
+	if self.vspd == -1 then
+		self.isJumping = true
+		self.jSpd = 40
+	elseif self.vspd == 1 then
+		self.isJumping = false
+		self.jSpd = 60
+	end
 
 	self.onFloor = g:collision()
 	
-	if self.onFloor then
-		self.canJump = true
-	end
+	self.canJump = self.onFloor
 
-	while g:overrideCollision() do
-		self.y = self.y - 1 * dt
+	if self.onFloor then
+		while g:overrideCollision() do
+			self.y = self.y - 1 * dt
+		end
 	end
 end
 
@@ -111,30 +125,14 @@ function PLAYER:deccelerate(dt)
 end
 
 function PLAYER:verticalMovement(dt)
-	local up = love.keyboard.isDown(keybindings.KEY_UP)
-
-	if up and self.canJump then
-		if self.y > self.reach then
-			self.vspd = -1
-		else
-			self.canJump = false
-		end
-	end
-
-	self.y = self.y + (self.vspd * self.jump) * dt
+	self.y = self.y + (self.vspd * self.jSpd) * dt
 end
 
 function PLAYER:jumping(dt)
 	if self.onFloor then
-		if self.jump < self.maxJump then
-			self.jump = self.jump + self.jAccel * dt
+		if self.jSpd < self.maxJump then
+			self.jSpd = self.jSpd + self.jAccel * dt
 		end
-	end
-end
-
-function PLAYER:falling(dt)
-	if self.onFloor == false then
-		self.vspd = 1
 	end
 end
 
@@ -161,9 +159,19 @@ function PLAYER:keypressed(key)
 			self:changeSprite()
 		end
 	end
+	if key == keybindings.KEY_UP then
+		if self.canJump then
+			self.jump = true
+			self.vspd = -1
+		end
+	end
 end
 
 function PLAYER:keyreleased(key)
+	if key == keybindings.KEY_UP then
+		self.jump = false
+		self.vspd = 1
+	end
 end
 
 function PLAYER:changeSprite()
@@ -203,6 +211,12 @@ function PLAYER:spriteControl(anim)
 		if anim.position == anim:getTotalFrames() then
 			anim:gotoFrame(anim:getTotalFrames())
 		end
+	end
+end
+
+function PLAYER:death(dt)
+	if self.y >= settings.gameHeight then
+		GAMESTATES.setState(GAMEOVER)
 	end
 end
 

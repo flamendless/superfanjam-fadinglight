@@ -11,6 +11,8 @@ function GAMESTATES.initialize()
 	GAME_INTRO = require("states/gameIntro")
 	GAMESTATES.levelLoad()
 
+	GAMEOVER = require("states/dead")
+
 	OPTIONS = require("states/options")
 	ABOUT = require("states/about")
 	CREDITS = require("states/credits")

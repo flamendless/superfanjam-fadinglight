@@ -27,11 +27,7 @@ function TITLE.preload()
 		local bgSpeed = 0.3
 		local bgMax = 6
 
-		anim_bg = ANIM8.newAnimation(_bg('1-' .. bgMax,1),bgSpeed,
-		function()
-			anim_bg:pauseAtEnd()
-			GAMESTATES.setState(GAME_INTRO)
-		end)
+		anim_bg = ANIM8.newAnimation(_bg('1-' .. bgMax,1),bgSpeed)
 	end)
 end
 
@@ -103,18 +99,13 @@ function TITLE.cursorAction()
 		CREDITS,
 		EXIT
 	}
-	if cursor == 1 then
-		continue = true
-		showOptions = false
+	if postjam then
+		GAMESTATES.setState(actions[cursor])
 	else
-		if postJam == true then
+		if cursor == #actions or cursor == 1 then
 			GAMESTATES.setState(actions[cursor])
 		else
-			if cursor == #actions then
-				GAMESTATES.setState(actions[cursor])
-			else
-				GAMESTATES.setState(UNFINISHED)
-			end
+			GAMESTATES.setState(UNFINISHED)
 		end
 	end
 end
