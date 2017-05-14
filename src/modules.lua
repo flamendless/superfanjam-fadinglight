@@ -13,6 +13,7 @@ function MODULES.load()
 	GROUND = require("entities/ground")
 	BOX = require("entities/box")
 	STONE = require("entities/stone")
+	JAVELIN = require("entities/javelin")
 
 	DEFAULTS = require("src/defaults")
 	GAMESTATES = require("src/gamestates")

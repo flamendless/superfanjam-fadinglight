@@ -3,7 +3,6 @@ local STATECLASS = require("modules/gamestatesClass")
 local LEVEL_2 = STATECLASS:set("LEVEL_2")
 local _groundY = 90
 local int = 2
-local dead_count = 0
 
 function LEVEL_2.getInt()
 	return int
@@ -27,7 +26,11 @@ end
 
 function LEVEL_2.update(dt)
 	ENTITIES.update(dt)
-	spawnTimer:update(dt)
+	
+	local p = ENTITIES.getEntity("PLAYER")
+	if p.x < settings.gameWidth - 32 then
+		spawnTimer:update(dt)
+	end
 	
 	for k,v in pairs(ENTITIES.getList()) do
 		if v:getTag() == "STONE" then
@@ -40,10 +43,6 @@ end
 
 function LEVEL_2.draw()
 	ENTITIES.draw()
-	if dead_count ~= 0 then
-		love.graphics.setColor(255,0,0,255)
-		love.graphics.line(20,20,40,20)
-	end
 	MISC.print("In Limbo, you don't die")
 end
 
@@ -61,7 +60,7 @@ end
 
 function LEVEL_2.goal()
 	local p = ENTITIES.getEntity("PLAYER")
-	return p.x > settings.gameWidth
+	return p.x > settings.gameWidth-8
 end
 
 GAMESTATES.insertLevel(LEVEL_2)

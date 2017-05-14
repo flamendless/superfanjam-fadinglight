@@ -91,6 +91,22 @@ function PLAYER:collision(dt)
 	end
 
 	self:boundary(dt)
+
+	if GAMESTATES.getState() == "LEVEL_2" then
+		local s = ENTITIES.getEntity("STONE")
+		for k,v in pairs(ENTITIES.getList()) do
+			if v:getTag() == "STONE" then
+				self.deathCondition = v:collision(dt)
+			end
+		end
+	elseif GAMESTATES.getState() == "LEVEL_3" then
+		local j = ENTITIES.getEntity("JAVELIN")
+		for k,v in pairs(ENTITIES.getList()) do
+			if v:getTag() == "JAVELIN" then
+				self.deathCondition = v:collision(dt)
+			end
+		end
+	end
 end
 
 function PLAYER:boundary(dt)
@@ -105,7 +121,6 @@ end
 function PLAYER:horizontalMovement(dt)
 	local left = love.keyboard.isDown(keybindings.KEY_LEFT)
 	local right = love.keyboard.isDown(keybindings.KEY_RIGHT)
-
 	if left then
 		self.hspd = -1
 		if self.onFloor then
@@ -175,6 +190,7 @@ function PLAYER:keypressed(key)
 	end
 	if key == keybindings.KEY_UP then
 		if self.canJump then
+			love.audio.play(assets.audio.jump)
 			self.jump = true
 			self.vspd = -1
 		end
@@ -234,13 +250,10 @@ function PLAYER:spriteControl(anim)
 	end
 end
 
-function PLAYER:setDeath(cond)
-	self.deathCondition = cond
-end
-
 function PLAYER:death(dt)
 	if self.deathCondition then
 		GAMESTATES.setState(STATE)
+		love.audio.play(assets.audio.die)
 	end
 end
 

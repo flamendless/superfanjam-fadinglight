@@ -21,8 +21,12 @@ function love.draw()
 	end
 	if postJam == false then
 		love.graphics.setColor(255,0,0,255)
-		love.graphics.print("version: jam",2,settings.gameHeight - 10)
+		love.graphics.print("#SUPERFANJAM",2,settings.gameHeight - 10)
 	end
+	love.graphics.setColor(255,0,0,255)
+	love.graphics.print("PRESS G For MY OTHER GAMES",
+		settings.gameWidth/2 + 18,
+		settings.gameHeight - 10)
 	love.graphics.pop()
 end
 

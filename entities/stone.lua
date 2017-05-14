@@ -19,14 +19,11 @@ function STONE:update(dt)
 		self.rot = self.rot + (-self.spd/2) * dt
 	end
 	self:collision(dt)
-	ENTITIES.getEntity("PLAYER"):setDeath(self:collision(dt))
 end
 
 function STONE:collision(dt)
 	local p = ENTITIES.getEntity("PLAYER")
-	local sx,sy = self.x - self.w/2, self.y - self.h/2
-	return p.x + p.w >= sx and p.x + p.w <= sx + self.w
-	and p.y + p.h >= sy
+	return MISC.collision(p.x,p.y,p.w,p.h,self.x,self.y,self.w,self.h)
 end
 
 function STONE:draw()

@@ -14,6 +14,8 @@ function GAME_INTRO.preload()
 	PRELOADER.newImage(assets.images,"toLimbo","assets/images/entities/toLimbo.png")
 	PRELOADER.newImage(assets.images,"box","assets/images/entities/box.png")
 	PRELOADER.newImage(assets.images,"stone","assets/images/entities/stone.png")
+	PRELOADER.newImage(assets.images,"javelin","assets/images/entities/javelin.png")
+
 
 	ASSETS.preload(function()
 		local _player = ANIM8.newGrid(10,18,assets.images.playerSheet:getDimensions())

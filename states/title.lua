@@ -21,6 +21,9 @@ function TITLE.preload()
 	PRELOADER.newImage(assets.images,"titleText","assets/images/titleScreen/title_screen_text.png")
 	PRELOADER.newImage(assets.images,"unfinished","assets/images/etc/unfinished.png")
 
+	PRELOADER.newSource(assets.audio,"jump","assets/audio/jump.ogg")
+	PRELOADER.newSource(assets.audio,"die","assets/audio/die.ogg")
+	PRELOADER.newSource(assets.audio,"blip","assets/audio/blip.ogg")
 	ASSETS.preload(function()
 		local _bg = ANIM8.newGrid(256,128,assets.images.titleBG:getDimensions()
 )
@@ -70,6 +73,7 @@ function TITLE.keypressed(key)
 	if showOptions == false and continue == false then
 		showOptions = true
 	else
+		love.audio.play(assets.audio.blip)
 		if key == keybindings.KEY_DOWN then
 			cursor = cursor + 1
 			if cursor > #options then

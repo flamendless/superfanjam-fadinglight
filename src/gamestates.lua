@@ -17,6 +17,7 @@ function GAMESTATES.initialize()
 	EXIT = require("states/exit")
 
 	UNFINISHED = require("states/unfinished")
+	FINISHED = require("states/finished")
 end
 
 function GAMESTATES.start(first)
@@ -56,6 +57,8 @@ function GAMESTATES.keypressed(key)
 			GAMESTATES.setState(STATE)
 		elseif key == "escape" then
 			GAMESTATES.setState(TITLE)
+		elseif key == "g" then
+			love.system.openURL("http://gamejolt.com/games/goinghome/237280")
 		end
 	end
 end
@@ -106,6 +109,8 @@ function GAMESTATES.nextLevel()
 	local nextInt = tonumber(int) + 1
 	if nextInt < maxLevels then
 		GAMESTATES.setState(levels[nextInt])
+	elseif nextInt == maxLevels then
+		GAMESTATES.setState(FINISHED)
 	end
 end
 
