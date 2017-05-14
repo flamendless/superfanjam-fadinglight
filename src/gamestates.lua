@@ -11,8 +11,6 @@ function GAMESTATES.initialize()
 	GAME_INTRO = require("states/gameIntro")
 	GAMESTATES.levelLoad()
 
-	GAMEOVER = require("states/dead")
-
 	OPTIONS = require("states/options")
 	ABOUT = require("states/about")
 	CREDITS = require("states/credits")
@@ -54,6 +52,11 @@ end
 function GAMESTATES.keypressed(key)
 	if ASSETS.getState() == true then
 		STATE.keypressed(key)
+		if key == "r" then
+			GAMESTATES.setState(STATE)
+		elseif key == "escape" then
+			GAMESTATES.setState(TITLE)
+		end
 	end
 end
 
@@ -112,6 +115,10 @@ end
 
 function GAMESTATES.getMaxLevels()
 	return maxLevels
+end
+
+function GAMESTATES.getGoal()
+	return STATE.goal()
 end
 
 return GAMESTATES

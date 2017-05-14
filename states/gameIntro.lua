@@ -12,6 +12,8 @@ function GAME_INTRO.preload()
 	PRELOADER.newImage(assets.images,"playerSheet","assets/images/entities/player_sheet.png")
 	PRELOADER.newImage(assets.images,"groundTop","assets/images/entities/ground_top.png")
 	PRELOADER.newImage(assets.images,"toLimbo","assets/images/entities/toLimbo.png")
+	PRELOADER.newImage(assets.images,"box","assets/images/entities/box.png")
+	PRELOADER.newImage(assets.images,"stone","assets/images/entities/stone.png")
 
 	ASSETS.preload(function()
 		local _player = ANIM8.newGrid(10,18,assets.images.playerSheet:getDimensions())
@@ -52,6 +54,8 @@ function GAME_INTRO.draw()
 		settings.gameWidth - 38,
 		_groundY - assets.images.toLimbo:getHeight())
 	ENTITIES.draw()
+
+	MISC.print("Press R to Restart \n A and D to Move \n W to Jump")
 end
 
 function GAME_INTRO.keypressed(key)
@@ -64,6 +68,11 @@ end
 
 function GAME_INTRO.exit()
 	ENTITIES.destroy()
+end
+
+function GAME_INTRO.goal()
+	local p = ENTITIES.getEntity("PLAYER")
+	return p.x > settings.gameWidth
 end
 
 return GAME_INTRO

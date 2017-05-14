@@ -4,9 +4,9 @@ local tag = "GROUND"
 function GROUND:new(x,y,w,h,tile)
 	self.x = x
 	self.y = y
-	self.w = w or settings.gameWidth
+	self.w = w or settings.gameWidth * 2
 	self.h = h or settings.gameHeight
-	self.tile = tile or 32
+	self.tile = tile or 16
 	self:load()
 end
 
@@ -21,11 +21,10 @@ end
 function GROUND:draw()
 	love.graphics.setColor(255,255,255,255)
 	love.graphics.rectangle("fill",self.x,self.y,self.w,self.h)
-	
-	for i = (self.x/self.tile), (self.w/self.tile) - 1 do
-		local tileW = self.tile
-		local groundX = i * tileW
-		local groundY = self.y - 6
+
+	for i = 0, (self.w/self.tile) -1  do
+		local groundX = i * self.tile
+		local groundY = self.y - 4
 		love.graphics.draw(assets.images.groundTop,
 			groundX, groundY)
 	end
@@ -33,23 +32,15 @@ end
 
 function GROUND:collision()
 	local p = ENTITIES.getEntity("PLAYER")
-	local px = p.x
-	local py = p.y
-	local pw = p.w
-	local ph = p.h
 
-	return px >= self.x and px <= self.x + self.w and --within range
-		py + ph >= self.y --collision
+	return p.x >= self.x and p.x + p.w <= self.x + self.w --within range
+		and p.y + p.h >= self.y --collision
 end
 
 function GROUND:overrideCollision()
 	local p = ENTITIES.getEntity("PLAYER")
-	local px = p.x
-	local py = p.y
-	local pw = p.w
-	local ph = p.h
 
-	return py + ph > self.y
+	return p.y + p.h >= self.y
 end
 
 function GROUND:keypressed(key)

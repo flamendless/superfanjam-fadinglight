@@ -35,4 +35,9 @@ function MISC.iterate(tbl)
 	end
 end
 
+function MISC.print(str)
+	love.graphics.setColor(255,255,255,255)
+	love.graphics.print(str,16,16)
+end
+
 return MISC

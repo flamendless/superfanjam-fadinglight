@@ -30,6 +30,7 @@ function PLAYER:new(anim,x,y,spd,ground)
 	self.isFalling = false
 	self.canJump = true
 	self.jump = true
+	self.deathCondition = false
 
 	self:load()
 end
@@ -51,7 +52,7 @@ function PLAYER:update(dt)
 
 	self:death(dt)
 
-	if self.x >= settings.gameWidth then
+	if GAMESTATES.getGoal() then
 		self:nextLevel()
 	end
 end
@@ -68,7 +69,7 @@ function PLAYER:collision(dt)
 	local g = ENTITIES.getEntity("GROUND")
 	local gy = g.y
 
-	self.reach = g.y - (self.h * 2)
+	self.reach = g.y - (self.h * 2.5)
 	if self.y <= self.reach then
 		self.vspd = 1
 	end
@@ -85,18 +86,19 @@ function PLAYER:collision(dt)
 	
 	self.canJump = self.onFloor
 
-	if self.onFloor then
-		while g:overrideCollision() do
-			self.y = self.y - 1 * dt
-		end
+	while g:overrideCollision() and self.onFloor do
+		self.y = self.y - 1
 	end
 
 	self:boundary(dt)
 end
 
 function PLAYER:boundary(dt)
-	while self.x <= 8 do
+	while self.x <= 2 do
 		self.x = self.x + 1 * dt
+	end
+	while self.x >= settings.gameWidth do
+		self.x = self.x - 1 * dt
 	end
 end
 
@@ -232,9 +234,13 @@ function PLAYER:spriteControl(anim)
 	end
 end
 
+function PLAYER:setDeath(cond)
+	self.deathCondition = cond
+end
+
 function PLAYER:death(dt)
-	if self.y >= settings.gameHeight then
-		GAMESTATES.setState(GAMEOVER)
+	if self.deathCondition then
+		GAMESTATES.setState(STATE)
 	end
 end
 
